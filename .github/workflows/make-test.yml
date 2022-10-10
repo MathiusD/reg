@@ -2,10 +2,18 @@ on: push
 name: make test
 jobs:
   maketest:
-    name: make test
-    runs-on: ubuntu-latest
+    name: ${{ matrix.build }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - build: Make Linux
+            os: ubuntu-latest
+          - build: Make macOS
+            os: macOS-latest
     steps:
       - uses: actions/checkout@master
+      - uses: docker-practice/actions-setup-docker@master
       - name: make test
         run: DOCKER_API_VERSION=1.39 make dind dtest
         shell: bash
